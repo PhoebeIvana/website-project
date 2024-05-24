@@ -11,7 +11,7 @@ export const Navbar = () => {
           <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center mr-6">
               <img src={logo} alt="Brand Logo" className="h-10" />
-              <p>BLINJI</p>
+              <p>COLORKOK</p>
             </div>
             <div className="flex space-x-4">
               <Link
@@ -19,12 +19,6 @@ export const Navbar = () => {
                 className="text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Shop
-              </Link>
-              <Link
-                to="/womens"
-                className="text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Womens
               </Link>
             </div>
           </div>

@@ -14,7 +14,6 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Shop />} />
-          <Route path="/womens" element={<ShopCategory category="womens" />} />
           <Route path="/product" element={<Product />} />
           <Route path=":productId" element={<Product />} />
           <Route />
