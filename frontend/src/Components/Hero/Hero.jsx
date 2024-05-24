@@ -18,13 +18,6 @@ export const Hero = () => {
           <img src={hand_icon} alt="Hand Icon" className="ml-2 h-6 w-auto" />
         </div>
         <p className="text-sm font-light text-gray-700 italic">collections for everyone</p>
-        
-        <div className="mt-8">
-          <div className="text-xl font-semibold text-gray-800">Latest Collection</div>
-          <div className="w-36 h-10 bg-gray-700 rounded-full mt-2 flex items-center justify-center">
-            <img src={arrow_icon} alt="Arrow Icon" className="h-6 w-auto" />
-          </div>
-        </div>
       </div>
     </div>
   );
