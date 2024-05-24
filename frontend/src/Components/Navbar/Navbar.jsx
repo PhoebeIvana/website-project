@@ -1,11 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link from React Router
+import { Link } from "react-router-dom"; 
 import logo from "../Assets/logo.png";
 import cart_icon from "../Assets/cart_icon.png";
 
 export const Navbar = () => {
   return (
-    <nav className="bg-white shadow-lg">
+    <nav className="bg-white shadow-lg w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
@@ -21,22 +21,10 @@ export const Navbar = () => {
                 Shop
               </Link>
               <Link
-                to="/mens"
-                className="text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Mens
-              </Link>
-              <Link
                 to="/womens"
                 className="text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Womens
-              </Link>
-              <Link
-                to="/kids"
-                className="text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Kids
               </Link>
             </div>
           </div>
