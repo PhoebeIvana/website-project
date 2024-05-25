@@ -10,12 +10,39 @@ export const getUsers = async (req, res) => {
     }
 }
 
+// export const saveUser = async (req, res) => {
+//     const { name, email, password } = req.query;
+    
+//     // Check if all required fields are provided
+//     if (!name || !email || !password) {
+//         return res.status(400).json({ message: "Salah input field" });
+//     }
+
+//     try {
+//         // Generate salt
+//         const salt = await bcrypt.genSalt(10);
+
+//         // Hash password
+//         const hashedPassword = await bcrypt.hash(password, salt);
+
+//         // Create a new User instance with hashed password
+//         const user = new User({ name, email, password: hashedPassword });
+
+//         // Save user to database
+//         const insertedUser = await user.save();
+
+//         res.status(201).json(insertedUser);
+//     } catch (error) {
+//         res.status(400).json({ message: error.message });
+//     }
+// }
+
 export const saveUser = async (req, res) => {
-    const { name, email, password } = req.query;
+    const { name, email, password } = req.body;  // Menggunakan req.body bukan req.query
     
     // Check if all required fields are provided
     if (!name || !email || !password) {
-        return res.status(400).json({ message: "Salah input field" });
+        return res.status(400).json({ message: "Nama, email, dan password diperlukan" });
     }
 
     try {
@@ -36,7 +63,6 @@ export const saveUser = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
-
 
 export const deletedUser = async (req, res) => {
     try {

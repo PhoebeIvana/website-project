@@ -71,6 +71,11 @@ const Navbar = () => {
                     Login
                   </button>
                 </Link>
+                <Link to="/signup">
+                  <button className="ml-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:bg-gray-900 focus:outline-none">
+                    Register
+                  </button>
+                </Link>
               </div>
             )}
           </div>

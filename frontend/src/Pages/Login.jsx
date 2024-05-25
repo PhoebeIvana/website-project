@@ -1,5 +1,5 @@
 import React from 'react'
-import './LoginSignUp.css';
+import './Login.css';
 import { useState } from "react"; 
 import { useAuth } from '../Context/AuthContext';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ const PasswordErrorMessage = () => {
     );
 };
   
-export const LoginSignUp = () => {
+export const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState({
         value: "",
@@ -129,7 +129,7 @@ export const LoginSignUp = () => {
 const App = () => (
     <Router>
         <Routes>
-            <Route path="/" element={<LoginSignUp />} />
+            <Route path="/" element={<Login />} />
         </Routes>
     </Router>
 );

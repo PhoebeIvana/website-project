@@ -3,7 +3,8 @@ import Navbar  from "./Components/Navbar/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ShopCategory } from "./Pages/ShopCategory";
 import { Cart } from "./Pages/Cart";
-import { LoginSignUp } from "./Pages/LoginSignUp";
+import { Login } from "./Pages/Login";
+import { Signup } from "./Pages/SignUp";
 import { Shop } from "./Pages/Shop";
 import { Product } from "./Pages/Product";
 import { AuthProvider } from './Context/AuthContext';
@@ -20,7 +21,8 @@ function App() {
             <Route path=":productId" element={<Product />} />
             <Route />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/login" element={<LoginSignUp />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
