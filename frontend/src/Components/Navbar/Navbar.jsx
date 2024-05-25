@@ -1,9 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom"; 
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../Context/AuthContext";
 import logo from "../Assets/logo.png";
 import cart_icon from "../Assets/cart_icon.png";
 
-export const Navbar = () => {
+const Navbar = () => {
+  const { user, logout } = useAuth();
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <nav className="bg-white shadow-lg w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,16 +42,42 @@ export const Navbar = () => {
                 </button>
               </Link>
             </div>
-            <div>
-              <Link to="/login">
-                <button className="ml-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:bg-gray-900 focus:outline-none">
-                  Login
-                </button>
-              </Link>
-            </div>
+            {user ? (
+              <div
+                className="ml-4 relative"
+                onMouseEnter={() => setIsDropdownVisible(true)}
+                onMouseLeave={() => setIsDropdownVisible(false)}
+              >
+                <div className="flex items-center">
+                  <button className="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:bg-gray-900 focus:outline-none">
+                    Welcome {user.email.split('@')[0]}!
+                  </button>
+                  {isDropdownVisible && (
+                    <div>
+                      <button
+                        onClick={handleLogout}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <Link to="/login">
+                  <button className="ml-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:bg-gray-900 focus:outline-none">
+                    Login
+                  </button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </nav>
   );
 };
+
+export default Navbar;
