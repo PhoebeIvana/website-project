@@ -1,4 +1,3 @@
-// Require Mongoose
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
@@ -28,6 +27,26 @@ const UserSchema = new Schema({
   }
 });
 
+// Schema untuk Cart
+const CartSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  items: [{
+    item_id: {
+      type: Schema.Types.ObjectId,
+      ref: "ShopModel",
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      default: 1,
+    },
+  }],
+});
+
 // Method to compare passwords
 UserSchema.methods.comparePassword = async function(candidatePassword) {
   try {
@@ -40,3 +59,4 @@ UserSchema.methods.comparePassword = async function(candidatePassword) {
 // Compile model from schema
 export const ShopModel = mongoose.model("ShopModel", ShopSchema);
 export const User = mongoose.model("User", UserSchema);
+export const CartModel = mongoose.model("CartModel", CartSchema);

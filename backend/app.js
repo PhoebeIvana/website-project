@@ -13,6 +13,11 @@ import {
   deletedUser,
   loginUser
 } from "./Controller/UserController.js";
+import { 
+  AddToCartFunction,
+  GetCartFunction,
+  RemoveFromCartFunction
+} from "./Controller/CartController.js";
 // importing cors
 import cors from "cors";
 // importing mongoose, ORM mapping the backend to the database
@@ -61,6 +66,11 @@ router.post("/user", saveUser);
 router.delete("/user/:id", deletedUser);
 //logun user
 router.post("/user/login", loginUser);
+
+//Router for cart
+router.post("/cart/add", AddToCartFunction); 
+router.get("/cart", GetCartFunction);
+router.delete("/cart/remove", RemoveFromCartFunction);
 
 const errorFunction = (error) => {
   if (!error)
