@@ -7,6 +7,12 @@ import {
   UpdateFunction,
   DeleteFunction,
 } from "./Controller/ShopController.js";
+import { 
+  getUsers,
+  saveUser,
+  deletedUser,
+  loginUser
+} from "./Controller/UserController.js";
 // importing cors
 import cors from "cors";
 // importing mongoose, ORM mapping the backend to the database
@@ -20,10 +26,15 @@ const PORT = 3001;
 const router = express.Router();
 dotenv.config();
 
-//Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+mongoose.connect(process.env.MONGODB_URI)
+.then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(PORT, () => {
+        console.log('Server is Successfully Running on ' + PORT);
+    });
+})
+.catch((error) => {
+    console.log(error);
 });
 
 //Middleware : Enable communications in between app
@@ -41,6 +52,16 @@ router.put("/item/:id", UpdateFunction);
 // Route for Delete
 router.delete("/item/:id", DeleteFunction);
 
+//Router for User
+//get user
+router.get("/user", getUsers);
+//save user
+router.post("/user", saveUser);
+//delete user
+router.delete("/user/:id", deletedUser);
+//logun user
+router.post("/user/login", loginUser);
+
 const errorFunction = (error) => {
   if (!error)
     console.log(
@@ -50,4 +71,4 @@ const errorFunction = (error) => {
 };
 
 app.use(router);
-app.listen(PORT, errorFunction);
+// app.listen(PORT, errorFunction); //tes connect ke database di atas.
