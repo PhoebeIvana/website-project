@@ -6,7 +6,7 @@ import { Cart } from "./Pages/Cart";
 import { Login } from "./Pages/Login";
 import { Signup } from "./Pages/SignUp";
 import { Shop } from "./Pages/Shop";
-import { Product } from "./Pages/Product";
+import Product from "./Pages/Product";
 import { AuthProvider } from './Context/AuthContext';
 
 function App() {
@@ -17,8 +17,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Shop />} />
-            <Route path="/product" element={<Product />} />
-            <Route path=":productId" element={<Product />} />
+            <Route path="/:productId" element={<Product />} />
             <Route />
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />

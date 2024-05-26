@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export const Item = ({ id, name, image, new_price, old_price }) => {
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-lg transition duration-300 ease-out transform hover:scale-110 hover:shadow-2xl">
+    <Link to={`/${id}`} className="bg-white rounded-lg overflow-hidden shadow-lg transition duration-300 ease-out transform hover:scale-110 hover:shadow-2xl">
       <img src={image} alt={name} className="w-full h-64 object-contain" />
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
@@ -11,6 +12,6 @@ export const Item = ({ id, name, image, new_price, old_price }) => {
           <p className="text-lg text-red-600 font-bold">${new_price}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
