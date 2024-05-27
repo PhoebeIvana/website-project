@@ -1,82 +1,112 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import data_product from "../Components/Assets/data";
 
 const Product = () => {
-  const { productId } = useParams();
-  const [quantity, setQuantity] = useState(1);  // Start with 1 for better UX
-  const [selectedSize, setSelectedSize] = useState(''); // New state for size selection
-  const product = data_product.find((p) => p.id === parseInt(productId));
+  const { productId } = useParams(); //Getting the object's attribute from useParam() function.
+  const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState("S");
+  const [itemDetail, setItemDetail] = useState();
 
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl font-semibold">Product not found</div>
-      </div>
+  const fetchData = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/item/${productId}`
     );
-  }
-
-  const handleQuantityChange = (delta) => {
-    setQuantity(prev => Math.max(0, prev + delta));
+    const result = await response.json();
+    setItemDetail(result);
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-200">
-      <div className="w-full max-w-2xl p-8 bg-white shadow-xl rounded-lg space-y-4">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-auto object-cover rounded-lg"
-        />
-        <h1 className="text-3xl font-semibold text-gray-900">{product.name}</h1>
-        <div className="flex justify-between items-center">
-          <p className="text-4xl text-red-500 font-bold">${product.new_price.toFixed(2)}</p>
-          <p className="text-xl text-gray-500 line-through">${product.old_price.toFixed(2)}</p>
-        </div>
-        <p className="text-gray-600">
-          {product.description || "No description available."}
-        </p>
-        <div className="text-gray-700">
-          <p><strong>Category:</strong> {product.category}</p>
-        </div>
-        <div>
-          <strong>Select Size:</strong>
-          <div className="flex space-x-2 mt-2">
-            {['S', 'M', 'L', 'XL', 'XXL'].map(size => (
-              <button
-                key={size}
-                className={`py-2 px-4 border ${selectedSize === size ? 'border-blue-500 bg-blue-100' : 'border-gray-300'}`}
-                onClick={() => setSelectedSize(size)}
-              >
-                {size}
-              </button>
-            ))}
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const addData = async () => {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/cart/add`, {
+      // object
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // [BE]:[FE], dont forget to change the userId
+      body: JSON.stringify({ userId: "665140e28b8f2ff272b13e6a", item_id: productId, quantity: quantity }),
+    });
+    await fetchData();
+  };
+
+  const handleQuantityChange = (delta) => {
+    setQuantity((prev) => Math.max(0, prev + delta));
+  };
+  
+
+  return itemDetail ? (
+    <>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-full max-w-md p-4 bg-white shadow-lg rounded-lg space-y-4">
+          <img
+            src={itemDetail.item_image}
+            alt={itemDetail.item_name}
+            className="w-full h-auto object-cover rounded-lg"
+          />
+          <h1 className="text-2xl font-bold text-gray-900">{itemDetail.item_name}</h1>
+          <div className="flex justify-between items-center">
+            <p className="text-2xl text-red-500 font-bold">
+              ${itemDetail.new_price.toFixed(2)}
+            </p>
+            <p className="text-lg text-gray-500 line-through">
+              ${itemDetail.old_price.toFixed(2)}
+            </p>
           </div>
-        </div>
-        <div className="flex items-center space-x-3 mt-4">
+          <p className="text-sm text-gray-600">
+            {itemDetail.description || "No description available."}
+          </p>
+          <div>
+            <strong>Select Size:</strong>
+            <div className="flex space-x-1 mt-1">
+              {["S", "M", "L", "XL", "XXL"].map((size) => (
+                <button
+                  key={size}
+                  className={`py-1 px-2 text-sm border ${
+                    selectedSize === size
+                      ? "border-blue-500 bg-blue-100"
+                      : "border-gray-300"
+                  }`}
+                  onClick={() => setSelectedSize(size)}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center justify-center space-x-2 mt-2">
+            <button
+              className="px-2 py-1 text-sm bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+              onClick={() => handleQuantityChange(-1)}
+              disabled={quantity <= 1}
+            >
+              -
+            </button>
+            <span className="text-sm">{quantity}</span>
+            <button
+              className="px-2 py-1 text-sm bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+              onClick={() => handleQuantityChange(1)}
+            >
+              +
+            </button>
+          </div>
           <button
-            className="text-lg px-3 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
-            onClick={() => handleQuantityChange(-1)}
-            disabled={quantity <= 1}
+            className="mt-2 w-full bg-blue-600 text-white py-2 text-sm rounded hover:bg-blue-700"
+            disabled={quantity === 0}
+            onClick={() => {
+              addData()
+              alert("Added to cart!");
+              window.location.href = "/"
+            }}
           >
-            -
-          </button>
-          <span className="text-lg">{quantity}</span>
-          <button
-            className="text-lg px-3 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
-            onClick={() => handleQuantityChange(1)}
-          >
-            +
+            Add to Cart
           </button>
         </div>
-        <button
-          className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          disabled={quantity === 0}
-          onClick={() => alert("Added to cart!")}
-        >
-          Add to Cart
-        </button>
       </div>
+    </>
+  ) : (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-xl font-semibold">Product not found</div>
     </div>
   );
 };

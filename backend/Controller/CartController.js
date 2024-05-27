@@ -64,4 +64,3 @@ export const RemoveFromCartFunction = async (req, res) => {
     res.status(500).json({ error: "An error occurred while removing from cart." });
   }
 };
-

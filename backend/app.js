@@ -4,19 +4,20 @@ import express from "express";
 import {
   CreateFunction,
   GetFunction,
+  GetDetailFunction,
   UpdateFunction,
   DeleteFunction,
 } from "./Controller/ShopController.js";
-import { 
+import {
   getUsers,
   saveUser,
   deletedUser,
-  loginUser
+  loginUser,
 } from "./Controller/UserController.js";
-import { 
+import {
   AddToCartFunction,
   GetCartFunction,
-  RemoveFromCartFunction
+  RemoveFromCartFunction,
 } from "./Controller/CartController.js";
 // importing cors
 import cors from "cors";
@@ -31,16 +32,17 @@ const PORT = 3001;
 const router = express.Router();
 dotenv.config();
 
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => {
-    console.log('Connected to MongoDB');
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
     app.listen(PORT, () => {
-        console.log('Server is Successfully Running on ' + PORT);
+      console.log("Server is Successfully Running on " + PORT);
     });
-})
-.catch((error) => {
+  })
+  .catch((error) => {
     console.log(error);
-});
+  });
 
 //Middleware : Enable communications in between app
 app.use(cors());
@@ -52,6 +54,8 @@ app.use(express.json());
 router.post("/item", CreateFunction);
 // Route for Read
 router.get("/item", GetFunction);
+// Route for Read Detail Data
+router.get("/item/:id", GetDetailFunction);
 // Route for Update
 router.put("/item/:id", UpdateFunction);
 // Route for Delete
@@ -68,7 +72,7 @@ router.delete("/user/:id", deletedUser);
 router.post("/user/login", loginUser);
 
 //Router for cart
-router.post("/cart/add", AddToCartFunction); 
+router.post("/cart/add", AddToCartFunction);
 router.get("/cart", GetCartFunction);
 router.delete("/cart/remove", RemoveFromCartFunction);
 

@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import data_product from "../Assets/data";
 import { Item } from "../Item/Item";
 
 export const Popular = () => {
   const [bgColor, setBgColor] = useState('bg-white');
+  const [itemShop, setItemShop] = useState([]);
+
+  const fetchData = async () => {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/item`);
+    const result = await response.json();
+    setItemShop(result);
+  }
+
+  useEffect(()=> {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const changeColorOnScroll = () => {
@@ -22,7 +32,7 @@ export const Popular = () => {
     <div className={`${bgColor} transition-colors duration-500 ease-in-out py-12`}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {data_product.map((item, index) => (
+          {itemShop && itemShop.map((item, index) => (
             <Item key={index} {...item} className="transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl"/>
           ))}
         </div>
