@@ -1,15 +1,25 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../Context/AuthContext";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../Assets/logo.png";
 import cart_icon from "../Assets/cart_icon.png";
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [user, setUser] = useState();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let user = localStorage.getItem("user")
+    if (user) {
+      user = JSON.parse(user);
+      setUser(user);
+    }
+  })
 
   const handleLogout = () => {
-    logout();
+    localStorage.removeItem("user");
+    setUser();
+    navigate("/login")
   };
 
   return (

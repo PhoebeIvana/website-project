@@ -5,7 +5,7 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { toast } from "react-toastify";
 
 const PasswordErrorMessage = () => (
   <p className="text-red-500 text-xs italic mt-2">
@@ -17,7 +17,6 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState({ value: "", isTouched: false });
   const [loginError, setLoginError] = useState("");
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const getIsFormValid = () =>
@@ -33,15 +32,20 @@ export const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3001/user/login", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/user/session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password: password.value }),
       });
       const data = await response.json();
+      const user = data.user;
       if (response.ok) {
-        login({ email });
-        alert("Logged In");
+        localStorage.setItem("user", JSON.stringify({
+          name: user.name,
+          _id: user._id,
+          email: user.email
+        }));
+        toast.success("Successfully logged in.");
         navigate("/");
       } else {
         setLoginError(data.message);

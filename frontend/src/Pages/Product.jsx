@@ -6,6 +6,7 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("S");
   const [itemDetail, setItemDetail] = useState();
+  const [user, setUser] = useState();
 
   const fetchData = async () => {
     const response = await fetch(
@@ -16,16 +17,21 @@ const Product = () => {
   };
 
   useEffect(() => {
+    let user = localStorage.getItem("user")
+    if (user) {
+      user = JSON.parse(user);
+      setUser(user);
+    }
     fetchData();
   }, []);
 
   const addData = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/cart/add`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/cart`, {
       // object
       method: "POST",
       headers: { "Content-Type": "application/json" },
       // [BE]:[FE], dont forget to change the userId
-      body: JSON.stringify({ userId: "665140e28b8f2ff272b13e6a", item_id: productId, quantity: quantity }),
+      body: JSON.stringify({ userId: user._id, item_id: productId, quantity: quantity, size: selectedSize}),
     });
     await fetchData();
   };

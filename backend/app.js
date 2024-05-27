@@ -18,6 +18,7 @@ import {
   AddToCartFunction,
   GetCartFunction,
   RemoveFromCartFunction,
+  UpdateCartFunction,
 } from "./Controller/CartController.js";
 // importing cors
 import cors from "cors";
@@ -69,12 +70,13 @@ router.post("/user", saveUser);
 //delete user
 router.delete("/user/:id", deletedUser);
 //logun user
-router.post("/user/login", loginUser);
+router.post("/user/session", loginUser);
 
 //Router for cart
-router.post("/cart/add", AddToCartFunction);
-router.get("/cart", GetCartFunction);
-router.delete("/cart/remove", RemoveFromCartFunction);
+router.post("/cart", AddToCartFunction);
+router.get("/cart/:userId", GetCartFunction);
+router.put("/cart/:userId", UpdateCartFunction);
+router.delete("/cart/:id/:userId", RemoveFromCartFunction);
 
 const errorFunction = (error) => {
   if (!error)

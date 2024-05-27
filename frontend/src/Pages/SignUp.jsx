@@ -5,6 +5,7 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const PasswordErrorMessage = () => (
   <p className="text-red-500 text-xs italic mt-2">
@@ -29,14 +30,31 @@ export const Signup = () => {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       );
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password: password.value, name: name }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Successfully created a new account.");
+        navigate("/login");
+      } else {
+        setSignupError(data.message);
+      }
+    } catch (error) {
+      setSignupError("An error occurred. Please try again later.");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-blue-200">
       <div className="w-full max-w-lg p-8 bg-white rounded-xl shadow-2xl">
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate("/login");
-          }}
+          onSubmit={handleSubmit}
           className="space-y-6"
         >
           <h2 className="text-3xl font-semibold text-center text-gray-800">

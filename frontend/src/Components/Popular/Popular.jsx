@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Item } from "../Item/Item";
+import { toast } from 'react-toastify';
 
 export const Popular = () => {
   const [bgColor, setBgColor] = useState('bg-white');
   const [itemShop, setItemShop] = useState([]);
 
   const fetchData = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/item`);
-    const result = await response.json();
-    setItemShop(result);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/item`);
+      const result = await response.json();
+      setItemShop(result);
+    } catch (err) {
+      toast.error("Error fetching data")
+    }
   }
 
   useEffect(()=> {
