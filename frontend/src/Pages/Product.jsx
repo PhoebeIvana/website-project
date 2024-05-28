@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Product = () => {
   const { productId } = useParams(); //Getting the object's attribute from useParam() function.
@@ -7,6 +8,7 @@ const Product = () => {
   const [selectedSize, setSelectedSize] = useState("S");
   const [itemDetail, setItemDetail] = useState();
   const [user, setUser] = useState();
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const response = await fetch(
@@ -26,7 +28,7 @@ const Product = () => {
   }, []);
 
   const addData = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/cart`, {
+    await fetch(`${process.env.REACT_APP_API_URL}/cart`, {
       // object
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -50,7 +52,9 @@ const Product = () => {
             alt={itemDetail.item_name}
             className="w-full h-auto object-cover rounded-lg"
           />
-          <h1 className="text-2xl font-bold text-gray-900">{itemDetail.item_name}</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {itemDetail.item_name}
+          </h1>
           <div className="flex justify-between items-center">
             <p className="text-2xl text-red-500 font-bold">
               ${itemDetail.new_price.toFixed(2)}
@@ -99,10 +103,10 @@ const Product = () => {
           <button
             className="mt-2 w-full bg-blue-600 text-white py-2 text-sm rounded hover:bg-blue-700"
             disabled={quantity === 0}
-            onClick={() => {
-              addData()
-              alert("Added to cart!");
-              window.location.href = "/"
+            onClick={async () => {
+              await addData();
+              navigate("/");
+              toast.success("Added product to cart.");
             }}
           >
             Add to Cart

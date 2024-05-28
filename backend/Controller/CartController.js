@@ -67,20 +67,61 @@ export const RemoveFromCartFunction = async (req, res) => {
 
 export const UpdateCartFunction = async (req, res) => {
   const { userId, item_id, quantity, size } = req.body;
+
   try {
-    const updatedCart = await CartModel.findOneAndUpdate(
-      { userId },
-      { item_id, quantity, size },
-      { new: true }
-    );
-    //returning the updated data
-    if (!updatedCart) {
-      return res.status(404).json({ error: "item not found" });
+    if (quantity > 0) {
+      // Update the item quantity and size if quantity is greater than 0
+      const updatedCart = await CartModel.findOneAndUpdate(
+        { userId, "items.item_id": item_id },
+        {
+          $set: {
+            "items.$.quantity": quantity,
+            "items.$.size": size,
+          },
+        },
+        { new: true }
+      );
+      if (!updatedCart) {
+        return res.status(404).json({ error: "Item not found in cart" });
+      }
+      res.json(updatedCart);
+    } else {
+      // Remove the item from the cart if quantity is 0
+      const updatedCart = await CartModel.findOneAndUpdate(
+        { userId },
+        {
+          $pull: {
+            items: { item_id: item_id },
+          },
+        },
+        { new: true }
+      );
+      if (!updatedCart) {
+        return res.status(404).json({ error: "Item not found in cart" });
+      }
+      res.json(updatedCart);
     }
-    res.json(updatedCart);
   } catch (error) {
     res
       .status(500)
-      .json({ error: "An error occurred while updating the data." });
+      .json({ error: "An error occurred while updating the cart." });
+  }
+};
+
+
+export const DeleteCartFunction = async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const deletedCart = await CartModel.findOneAndDelete({ userId });
+    //returning the deleted data
+    if (!deletedCart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+    res.json(deletedCart);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the data." });
   }
 };

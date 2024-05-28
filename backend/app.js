@@ -16,6 +16,7 @@ import {
 } from "./Controller/UserController.js";
 import {
   AddToCartFunction,
+  DeleteCartFunction,
   GetCartFunction,
   RemoveFromCartFunction,
   UpdateCartFunction,
@@ -76,6 +77,7 @@ router.post("/user/session", loginUser);
 router.post("/cart", AddToCartFunction);
 router.get("/cart/:userId", GetCartFunction);
 router.put("/cart/:userId", UpdateCartFunction);
+router.delete("/cart/:userId", DeleteCartFunction);
 router.delete("/cart/:id/:userId", RemoveFromCartFunction);
 
 const errorFunction = (error) => {

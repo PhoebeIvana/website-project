@@ -28,15 +28,6 @@ const UserSchema = new Schema({
   }
 });
 
-// MONGODB
-// 1. SANGAT MEMAKAI KONSEP NOSQL
-// 2. SETIAP DOCUMENT PASTI ADA _id dan ini unik untuk semua document apapun
-// (ibarat row)
-// 3. _id tipenya ObjectId, jadi MONGODB membuat _id bertipe ObjectId 
-//    untuk setiap dokumen dan PASTI UNIK
-// 4. MONGODB kalau kamu mau nerapin konsep FOREIGN KEY, pakailah ref
-
-
 // Schema untuk Cart
 const CartSchema = new Schema({
   userId: {

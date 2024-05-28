@@ -1,25 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../Assets/logo.png";
 import cart_icon from "../Assets/cart_icon.png";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [user, setUser] = useState();
+  const [cartCount, setCartCount] = useState();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    let user = localStorage.getItem("user")
+    let user = localStorage.getItem("user");
     if (user) {
       user = JSON.parse(user);
       setUser(user);
     }
-  })
+  }, [location]);
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      if (!user) return;
+
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/cart/${user._id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        if (data.items) setCartCount(data.items.length);
+        else setCartCount();
+      } catch (error) {
+        setCartCount();
+        console.error("Error fetching cart items:", error);
+      } finally {
+        if (location.pathname.startsWith("/cart")) {
+          setCartCount();
+        }
+      }
+    };
+    fetchCartItems();
+  }, [user, location]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser();
-    navigate("/login")
+    toast.success("Successfully logout.")
+    navigate("/login");
   };
 
   return (
@@ -42,13 +75,15 @@ const Navbar = () => {
           </div>
           <div className="flex items-center">
             <div className="flex-shrink-0 relative">
-              <Link to="/cart">
-                <button className="flex items-center justify-center p-2 rounded-md text-gray-900 hover:text-white hover:bg-gray-800 focus:outline-none focus:bg-gray-700">
+              <Link to={`${user ? "/cart" : "/login"}`}>
+                <button className="flex items-center justify-center p-2 rounded-md text-gray-900 hover:text-white hover:bg-gray-800 focus:outline-none">
                   <span className="sr-only">View cart</span>
                   <img src={cart_icon} alt="Cart" className="h-6" />
-                  <span className="absolute top-0 right-0 h-4 w-4 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
-                    3
-                  </span>
+                  {cartCount ? (
+                    <span className="absolute top-0 right-0 h-4 w-4 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  ) : (<></>)}
                 </button>
               </Link>
             </div>
@@ -60,7 +95,7 @@ const Navbar = () => {
               >
                 <div className="flex items-center">
                   <button className="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:bg-gray-900 focus:outline-none">
-                    Welcome {user.email.split('@')[0]}!
+                    Welcome {user.email.split("@")[0]}!
                   </button>
                   {isDropdownVisible && (
                     <div>
