@@ -33,7 +33,13 @@ const Product = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       // [BE]:[FE], dont forget to change the userId
-      body: JSON.stringify({ userId: user._id, item_id: productId, quantity: quantity, size: selectedSize}),
+      body: JSON.stringify({
+        userId: user._id,
+        item_id: productId,
+        quantity: quantity,
+        size: selectedSize,
+        price: itemDetail.new_price,
+      }),
     });
     await fetchData();
   };

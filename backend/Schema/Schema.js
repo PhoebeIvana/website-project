@@ -25,6 +25,10 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true,
+  },
+  balance: {
+    type: Number,
+    required: true,
   }
 });
 
@@ -49,6 +53,10 @@ const CartSchema = new Schema({
       type: String,
       default: "S",
     },
+    price: {
+      type: Number,
+      default: 0,
+    }
   }],
 });
 

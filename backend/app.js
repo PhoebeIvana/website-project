@@ -13,6 +13,7 @@ import {
   saveUser,
   deletedUser,
   loginUser,
+  updateUser,
 } from "./Controller/UserController.js";
 import {
   AddToCartFunction,
@@ -68,6 +69,8 @@ router.delete("/item/:id", DeleteFunction);
 router.get("/user", getUsers);
 //save user
 router.post("/user", saveUser);
+//update user
+router.put("/user/:id", updateUser);
 //delete user
 router.delete("/user/:id", deletedUser);
 //logun user

@@ -93,14 +93,29 @@ export const Cart = () => {
         }
       );
       if (response.ok) {
-        setCartItems([]);
-        toast.success("Successfully checkout.");
-        navigate("/");
+        response
+          .json()
+          .then((data) => {
+            localStorage.setItem("user", JSON.stringify(data.user));
+            setCartItems([]);
+            toast.success("Successfully checkout.");
+            navigate("/");
+          })
+          .catch((error) => {
+            toast.error("Failed to process the response.");
+          });
       } else {
-        console.error("Failed to checkout");
+        response
+          .json()
+          .then((data) => {
+            toast.error(data.error);
+          })
+          .catch((error) => {
+            toast.error("Failed to process the response.");
+          });
       }
     } catch (error) {
-      console.error("Error checkout:", error);
+      toast.error("Error checkout:", error);
     }
   }
 

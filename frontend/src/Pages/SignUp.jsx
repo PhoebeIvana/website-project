@@ -36,7 +36,7 @@ export const Signup = () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password: password.value, name: name }),
+        body: JSON.stringify({ email, password: password.value, name: name, balance: 0 }),
       });
       const data = await response.json();
       if (response.ok) {

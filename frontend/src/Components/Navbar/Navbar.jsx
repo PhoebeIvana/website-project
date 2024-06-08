@@ -51,7 +51,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser();
-    toast.success("Successfully logout.")
+    toast.success("Successfully logout.");
     navigate("/login");
   };
 
@@ -72,6 +72,18 @@ const Navbar = () => {
                 Shop
               </Link>
             </div>
+            {user ? (
+              <div className="flex space-x-4">
+                <Link
+                  to="/topup"
+                  className="text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Topup
+                </Link>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
           <div className="flex items-center">
             <div className="flex-shrink-0 relative">
@@ -83,7 +95,9 @@ const Navbar = () => {
                     <span className="absolute top-0 right-0 h-4 w-4 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
                       {cartCount}
                     </span>
-                  ) : (<></>)}
+                  ) : (
+                    <></>
+                  )}
                 </button>
               </Link>
             </div>
@@ -97,6 +111,11 @@ const Navbar = () => {
                   <button className="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:bg-gray-900 focus:outline-none">
                     Welcome {user.email.split("@")[0]}!
                   </button>
+                  {user.balance ? (
+                    <span className="mx-4">Balance: ${user.balance}</span>
+                  ) : (
+                    <></>
+                  )}
                   {isDropdownVisible && (
                     <div>
                       <button

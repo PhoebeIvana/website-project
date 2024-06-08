@@ -1,14 +1,14 @@
-import { CartModel } from "../Schema/Schema.js";
+import { CartModel, User } from "../Schema/Schema.js";
 
 export const AddToCartFunction = async (req, res) => {
-  const { userId, item_id, quantity, size } = req.body;
+  const { userId, item_id, quantity, size, price } = req.body;
 
   try {
     let cart = await CartModel.findOne({ userId });
     if (!cart) {
       cart = new CartModel({
         userId,
-        items: [{ item_id, quantity, size }],
+        items: [{ item_id, quantity, size, price }],
       });
     } else {
       const itemIndex = cart.items.findIndex(
@@ -17,7 +17,7 @@ export const AddToCartFunction = async (req, res) => {
       if (itemIndex !== -1) {
         cart.items[itemIndex].quantity += quantity;
       } else {
-        cart.items.push({ item_id, quantity, size });
+        cart.items.push({ item_id, quantity, size, price });
       }
     }
 
@@ -113,15 +113,42 @@ export const DeleteCartFunction = async (req, res) => {
   const userId = req.params.userId;
 
   try {
-    const deletedCart = await CartModel.findOneAndDelete({ userId });
-    //returning the deleted data
-    if (!deletedCart) {
+    // Retrieve the user's information
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Retrieve the user's cart
+    const cart = await CartModel.findOne({ userId });
+    if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
-    res.json(deletedCart);
+
+    // Calculate the total cost of the cart
+    const totalCartCost = cart.items.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+
+    // Check if the user's balance is sufficient
+    if (totalCartCost > user.balance) {
+      return res.status(400).json({ error: "Insufficient balance" });
+    }
+
+    // Subtract the total cost of the cart from the user's balance
+    user.balance -= totalCartCost;
+    await user.save();
+
+    // Delete the cart
+    const deletedCart = await CartModel.findOneAndDelete({ userId });
+
+    // Return the deleted cart data
+    const updatedUser = await User.findById(userId);
+    res.json({ cart: deletedCart, user: updatedUser });
   } catch (error) {
     res
       .status(500)
-      .json({ error: "An error occurred while deleting the data." });
+      .json({ error: "An error occurred while processing your request." });
   }
 };

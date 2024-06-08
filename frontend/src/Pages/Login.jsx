@@ -43,7 +43,8 @@ export const Login = () => {
         localStorage.setItem("user", JSON.stringify({
           name: user.name,
           _id: user._id,
-          email: user.email
+          email: user.email,
+          balance: user.balance,
         }));
         toast.success("Successfully logged in.");
         navigate("/");

@@ -11,11 +11,11 @@ export const getUsers = async (req, res) => {
 }
 
 export const saveUser = async (req, res) => {
-    const { name, email, password } = req.body;  // Menggunakan req.body bukan req.query
+    const { name, email, password, balance } = req.body;  // Menggunakan req.body bukan req.query
     
     // Check if all required fields are provided
-    if (!name || !email || !password) {
-        return res.status(400).json({ message: "Nama, email, dan password diperlukan" });
+    if (!name || !email || !password || balance == undefined) {
+        return res.status(400).json({ message: "Nama, email, password, dan balance diperlukan" });
     }
 
     try {
@@ -26,7 +26,7 @@ export const saveUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create a new User instance with hashed password
-        const user = new User({ name, email, password: hashedPassword });
+        const user = new User({ name, email, password: hashedPassword, balance });
 
         // Save user to database
         const insertedUser = await user.save();
@@ -36,6 +36,23 @@ export const saveUser = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+
+export const updateUser = async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 export const deletedUser = async (req, res) => {
     try {
